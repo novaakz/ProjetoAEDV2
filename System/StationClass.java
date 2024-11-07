@@ -6,11 +6,11 @@ public class StationClass implements Station {
 
     static final long serialVersionUID = 0L;
 
-    protected OrderedDoubleList<Line, OrderedDoubleList<String, Time>> lines;
+    protected OrderedDoubleList<Line, Schedule> lines;
     protected String name;
 
     public StationClass(String name) {
-        this.lines = new OrderedDoubleList<Line, OrderedDoubleList<String, Time>>();
+        this.lines = new OrderedDoubleList<Line, Schedule>();
         this.name = name;
     }
 
@@ -19,7 +19,7 @@ public class StationClass implements Station {
     }
 
     public void addLine(Line line) {
-        lines.insert(line, new OrderedDoubleList<String, Time>());
+        lines.insert(line, new ScheduleClass());
     }
 
     public void removeLine(Line line) {

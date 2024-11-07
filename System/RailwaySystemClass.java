@@ -46,6 +46,46 @@ public class RailwaySystemClass implements RailwaySystem {
         return lines.find(line).iterator();
     }
 
+    public void insertSched(String lineName, String train, DoubleList<String[]> stationTime) 
+    throws InexistentLineExeption, InvalidScheduleException {
+
+        Line line = new LineClass(lineName);
+        if(!existsLine(line))
+            throw new InexistentLineExeption();
+        
+        Iterator<String[]> it = stationTime.iterator();
+        String stationName = arrangeStationName(stationTime.getFirst());
+        DoubleList<Station> stations = lines.find(line);
+        int stationPos = 0;
+
+        if(!stationName.equals(stations.getFirst().getName())) {
+            if(!stationName.equals(stations.getLast().getName()))
+                throw new InvalidScheduleException();
+            stationPos = stations.size() - 1;
+        }
+
+        while(it.hasNext()) {
+            String[] tmp = it.next();
+            Time time = parseTime(tmp[tmp.length - 1]);
+            stationName = arrangeStationName(tmp);
+            int i = stationPos;
+        }
+    }
+
+    private String arrangeStationName(String[] station) {
+        String stationName = station[0];
+        for(int i = 1; i < station.length - 1; i++)
+                stationName += " " + station[i];
+        return stationName;
+    }
+
+    private Time parseTime(String timeLine) {
+        String[] tmp = timeLine.split(":");
+        int hour = Integer.parseInt(tmp[0]);
+        int min = Integer.parseInt(tmp[1]);
+        return new TimeClass(hour, min);
+    }
+
     private boolean existsLine(Line line) {
         if(lines.find(line) != null)
             return true;

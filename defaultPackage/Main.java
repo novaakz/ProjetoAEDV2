@@ -65,19 +65,17 @@ public class Main {
         in.close();
     }
 
-    // NÃO ESQUECER DAS EXCEPTIONS!!!!!
     private static void inLine(Scanner in, RailwaySystemClass sys) {
         try {
-        String name = in.nextLine().trim();
-        DoubleList<String> stations = makeList(in);
-        sys.insertLine(name, stations);
-        System.out.println(LINE_INSERT_SUCCESS);
-        } catch (ExistentLineException e) {
+            String name = in.nextLine().trim();
+            DoubleList<String> stations = makeList(in);
+            sys.insertLine(name, stations);
+            System.out.println(LINE_INSERT_SUCCESS);
+            } catch (ExistentLineException e) {
             System.out.println(EXISTING_LINE);
-        }
+            }
     }
 
-    // NÃO ESQUECER DAS EXCEPTIONS!!!!!
     private static final void rmLine(Scanner in, RailwaySystemClass sys) {
         try {
             String name = in.nextLine().trim();
@@ -88,7 +86,6 @@ public class Main {
             }
     }
 
-    // NÃO ESQUECER DAS EXCEPTIONS!!!!!
     private static final void consLine(Scanner in, RailwaySystemClass sys) {
         try {
             String name = in.nextLine().trim();
@@ -101,7 +98,26 @@ public class Main {
     }
 
     private static final void inSched(Scanner in, RailwaySystemClass sys) {
-        
+        try {
+            String name = in.nextLine().trim();
+            String train = in.nextLine().trim();
+            DoubleList<String[]> schedule = new DoubleList<String[]>();
+            String[] stationTime;
+            int i = 0;
+            
+            do {
+                schedule.add(i, getStationTime(in));
+                stationTime = schedule.get(i++);
+            } while(stationTime != null);
+
+            sys.insertSched(name, train, schedule);
+            
+        } catch (InexistentLineExeption e) {
+                System.out.println(NONEXISTING_LINE);
+            }
+        catch (InvalidScheduleException e) {
+            System.out.println(INVALID_SCHEDULE);
+        }
     }
 
     private static final void terminate(RailwaySystemClass sys) {

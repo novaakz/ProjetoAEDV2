@@ -6,7 +6,6 @@ public class LineClass implements Line {
 
     static final long serialVersionUID = 0L;
 
-    protected OrderedDoubleList<String, DoubleList<Station>> schedules;
     protected String name;
 
     public LineClass(String name) {
