@@ -71,6 +71,7 @@ public class Main {
             DoubleList<String> stations = makeList(in);
             sys.insertLine(name, stations);
             System.out.println(LINE_INSERT_SUCCESS);
+
             } catch (ExistentLineException e) {
             System.out.println(EXISTING_LINE);
             }
@@ -81,6 +82,7 @@ public class Main {
             String name = in.nextLine().trim();
             sys.removeLine(name);
             System.out.println(LINE_REMOVE_SUCCESS);
+
             } catch (InexistentLineExeption e) {
                 System.out.println(NONEXISTING_LINE);
             }
@@ -92,6 +94,7 @@ public class Main {
             Iterator<Station> it = sys.getLineStations(name);
             while(it.hasNext())
                 System.out.println(it.next().getName());
+                
             } catch (InexistentLineExeption e) {
                 System.out.println(NONEXISTING_LINE);
             }
@@ -104,7 +107,7 @@ public class Main {
             DoubleList<String[]> schedule = new DoubleList<String[]>();
             String[] endLine = getStationTime(in);
             int i = 0;
-            while(!endLine[0].isEmpty()) {
+            while(!endLine[0].isBlank()) {
                 schedule.add(i++, endLine);
                 endLine = getStationTime(in);
             }
@@ -113,10 +116,10 @@ public class Main {
             System.out.println(SCHEDULE_INSERT_SUCCESS);
             
         } catch (InexistentLineExeption e) {
-                System.out.println(NONEXISTING_LINE + " " + e.getMessage());
+                System.out.println(NONEXISTING_LINE);
             }
         catch (InvalidScheduleException e) {
-            System.out.println(INVALID_SCHEDULE);
+            System.out.println(INVALID_SCHEDULE + " " + e.getMessage());
         }
     }
 
@@ -133,12 +136,14 @@ public class Main {
 
     private static final DoubleList<String> makeList(Scanner in) {
         DoubleList<String> stations = new DoubleList<String>();
-        String station = in.nextLine();
-        int i = 0;
-        while(!station.isEmpty()) {
-            stations.add(i++, station);
-            station = in.nextLine();
-        }
+        String station;
+
+        do{
+            station = in.nextLine().trim();
+            if(!station.isBlank())
+                stations.addLast(station);
+        }while(!station.isBlank());
+
         return stations;
     }
 
