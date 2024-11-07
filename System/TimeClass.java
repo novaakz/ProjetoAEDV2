@@ -20,4 +20,10 @@ public class TimeClass implements Time {
         return minute;
     }
 
+    public boolean hasTravelTime(Time other) {
+        if(this.hour == other.getHour())
+            return this.minute < other.getMinute();
+        return this.hour < other.getHour();
+    }
+
 }

@@ -6,10 +6,14 @@ public class ScheduleClass implements Schedule {
 
     static final long serialVersionUID = 0L;
 
-    private OrderedDoubleList<String, Time> schedule;
+    private OrderedDoubleList<Station, Time> schedule;
 
     public ScheduleClass() {
-        this.schedule = new OrderedDoubleList<String, Time>();
+        this.schedule = new OrderedDoubleList<Station, Time>();
+    }
+
+    public void addSched(Station station, Time time) {
+        schedule.insert(station, time);
     }
     
     @Override

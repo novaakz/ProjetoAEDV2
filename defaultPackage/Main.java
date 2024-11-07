@@ -55,7 +55,7 @@ public class Main {
                 case INSERT_LINE -> inLine(in, sys);
                 case REMOVE_LINE -> rmLine(in, sys);
                 case CONSULT_LINE -> consLine(in, sys);
-                case INSERT_SCHEDULE -> System.out.println("IN DEV");
+                case INSERT_SCHEDULE -> inSched(in, sys);
                 case REMOVE_SCHEDULE -> System.out.println("IN DEV");
                 case CONSULT_SCHEDULES -> System.out.println("IN DEV");
                 case BEST_SCHEDULE -> System.out.println("IN DEV");
