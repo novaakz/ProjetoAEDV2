@@ -31,8 +31,8 @@ public class Main {
     // Output messages for SUCCESSFUL operations
     private static final String LINE_INSERT_SUCCESS = "Inserção de linha com sucesso.";
     private static final String LINE_REMOVE_SUCCESS = "Remoção de linha com sucesso.";
-    private static final String TIMETABLE_INSERT_SUCCESS = "Criação de horário com sucesso.";
-    private static final String TIMETABLE_REMOVE_SUCCESS = "Remoção de horário com sucesso.";
+    private static final String SCHEDULE_INSERT_SUCCESS = "Criação de horário com sucesso.";
+    private static final String SCHEDULE_REMOVE_SUCCESS = "Remoção de horário com sucesso.";
     private static final String APP_TERMINATED_SUCCESS = "Aplicação terminada.";
 
     // Output messages for FAILED operations
@@ -102,18 +102,18 @@ public class Main {
             String name = in.nextLine().trim();
             String train = in.nextLine().trim();
             DoubleList<String[]> schedule = new DoubleList<String[]>();
-            String[] stationTime;
+            String[] endLine = getStationTime(in);
             int i = 0;
-            
-            do {
-                schedule.add(i, getStationTime(in));
-                stationTime = schedule.get(i++);
-            } while(stationTime != null);
+            while(!endLine[0].isEmpty()) {
+                schedule.add(i++, endLine);
+                endLine = getStationTime(in);
+            }
 
             sys.insertSched(name, train, schedule);
+            System.out.println(SCHEDULE_INSERT_SUCCESS);
             
         } catch (InexistentLineExeption e) {
-                System.out.println(NONEXISTING_LINE);
+                System.out.println(NONEXISTING_LINE + " " + e.getMessage());
             }
         catch (InvalidScheduleException e) {
             System.out.println(INVALID_SCHEDULE);

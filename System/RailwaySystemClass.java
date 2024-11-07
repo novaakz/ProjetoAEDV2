@@ -65,7 +65,7 @@ public class RailwaySystemClass implements RailwaySystem {
 
         if(!firstStationName.equals(lineStations.getFirst().getName())) {
             if(!firstStationName.equals(lineStations.getLast().getName()))
-                throw new InvalidScheduleException();
+                throw new InvalidScheduleException("1");
             else {
                 dir = -1;
                 currentPos = lineStations.size() - 1;
@@ -95,7 +95,7 @@ public class RailwaySystemClass implements RailwaySystem {
                         currentPos++;
                 }
                 if(!found || !scheduleTimes.get(stationsValidated - 1).hasTravelTime(time))
-                    throw new InvalidScheduleException();
+                    throw new InvalidScheduleException("2");
                 scheduleStations.add(stationsValidated, station);
                 scheduleTimes.add(stationsValidated++, time);
             }
@@ -107,7 +107,7 @@ public class RailwaySystemClass implements RailwaySystem {
                         currentPos--;
                 }
                 if(!found || !scheduleTimes.get(stationsValidated - 1).hasTravelTime(time))
-                    throw new InvalidScheduleException();
+                    throw new InvalidScheduleException("3");
                 scheduleStations.add(stationsValidated, station);
                 scheduleTimes.add(stationsValidated++, time);
             }
