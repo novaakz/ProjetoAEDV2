@@ -77,7 +77,7 @@ public class Main {
             }
     }
 
-    private static final void rmLine(Scanner in, RailwaySystemClass sys) {
+    private static void rmLine(Scanner in, RailwaySystemClass sys) {
         try {
             String name = in.nextLine().trim();
             sys.removeLine(name);
@@ -88,19 +88,19 @@ public class Main {
             }
     }
 
-    private static final void consLine(Scanner in, RailwaySystemClass sys) {
+    private static void consLine(Scanner in, RailwaySystemClass sys) {
         try {
             String name = in.nextLine().trim();
             Iterator<Station> it = sys.getLineStations(name);
             while(it.hasNext())
                 System.out.println(it.next().getName());
-                
+
             } catch (InexistentLineExeption e) {
                 System.out.println(NONEXISTING_LINE);
             }
     }
 
-    private static final void inSched(Scanner in, RailwaySystemClass sys) {
+    private static void inSched(Scanner in, RailwaySystemClass sys) {
         try {
             String name = in.nextLine().trim();
             String train = in.nextLine().trim();
@@ -123,18 +123,18 @@ public class Main {
         }
     }
 
-    private static final void terminate(RailwaySystemClass sys) {
+    private static void terminate(RailwaySystemClass sys) {
         save(sys);
         System.out.println(APP_TERMINATED_SUCCESS);
     }
 
-    private static final String[] getStationTime(Scanner in) {
+    private static String[] getStationTime(Scanner in) {
         String[] input;
         input = in.nextLine().split(" ");
         return input;
     }
 
-    private static final DoubleList<String> makeList(Scanner in) {
+    private static DoubleList<String> makeList(Scanner in) {
         DoubleList<String> stations = new DoubleList<String>();
         String station;
 

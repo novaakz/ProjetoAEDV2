@@ -78,7 +78,7 @@ public class RailwaySystemClass implements RailwaySystem {
         
         Iterator<String[]> it = stationTime.iterator();
         String[] tmp = it.next();
-        scheduleStations.addFirst(this.stations.find(arrangeStationName(tmp)));
+        scheduleStations.addFirst(this.stations.find(arrangeStationName(tmp).toUpperCase()));
         scheduleTimes.addFirst(parseTime(tmp[tmp.length - 1]));
 
         int stationsValidated = 1;
@@ -130,9 +130,7 @@ public class RailwaySystemClass implements RailwaySystem {
 
     private Time parseTime(String timeLine) {
         String[] tmp = timeLine.split(":");
-        int hour = Integer.parseInt(tmp[0]);
-        int min = Integer.parseInt(tmp[1]);
-        return new TimeClass(hour, min);
+        return new TimeClass(tmp[0], tmp[1]);
     }
 
     private boolean existsLine(String lineName) {
