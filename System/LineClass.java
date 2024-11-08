@@ -33,6 +33,14 @@ public class LineClass implements Line {
         return stations.iterator();
     }
 
+    public Iterator<Entry<String, Schedule>> getScheduleIt() {
+        return schedules.iterator();
+    }
+
+    public boolean isDepartingStation(Station station) {
+        return stations.getFirst().equals(station) || stations.getLast().equals(station);
+    }
+
     @Override
     public int compareTo(Line o) {
         return this.name.toUpperCase().compareTo(o.getName().toUpperCase());

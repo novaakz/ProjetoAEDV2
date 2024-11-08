@@ -14,4 +14,8 @@ public interface Line extends Comparable<Line>, Serializable {
 
     Iterator<Station> getStationsIt();
 
+    Iterator<Entry<String, Schedule>> getScheduleIt();
+
+    boolean isDepartingStation(Station station);
+
 }

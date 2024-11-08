@@ -20,13 +20,22 @@ public class TimeClass implements Time {
         return minute;
     }
 
+    public String getTime() {
+        return hour + ":" + minute;
+    }
+
     public boolean hasTravelTime(Time other) {
+        return this.compareTo(other) < 0;
+    }
+
+    @Override
+    public int compareTo(Time o) {
         int intHour = Integer.parseInt(hour);
         int intMin = Integer.parseInt(minute);
         
-        if(intHour == Integer.parseInt(other.getHour()))
-            return intMin < Integer.parseInt(other.getMinute());
-        return intHour < Integer.parseInt(other.getHour());
+        if(intHour - Integer.parseInt(o.getHour()) == 0)
+            return intMin - Integer.parseInt(o.getMinute());
+        return intHour - Integer.parseInt(o.getHour());
     }
 
 }

@@ -112,6 +112,7 @@ public class RailwaySystemClass implements RailwaySystem {
         }
 
         Schedule schedule = new ScheduleClass();
+        schedule.addTrain(train);
         Iterator<Station> s = scheduleStations.iterator();
         Iterator<Time> t = scheduleTimes.iterator();
         
@@ -119,6 +120,35 @@ public class RailwaySystemClass implements RailwaySystem {
             schedule.addSched(s.next(), t.next());
 
         line.insertSchedule(train, schedule);
+    }
+
+    // SOMETHING WRONG WITH THIS METHOD!!!!!!!!!
+    public Iterator<Entry<Time, Schedule>> consultSchedules(String lineName, String stationName) 
+    throws InexistentLineExeption, NonexistentStationException {
+
+        if(!existsLine(lineName))
+            throw new InexistentLineExeption();
+        if(!existsStation(stationName))
+            throw new NonexistentStationException();
+
+        Line line = lines.find(lineName.toUpperCase());
+        Station station = stations.find(stationName.toUpperCase());
+
+        if(!line.isDepartingStation(station))
+            throw new NonexistentStationException();
+
+        Iterator<Entry<String, Schedule>> it = line.getScheduleIt();
+        OrderedDoubleList<Time, Schedule> schedules = new OrderedDoubleList<Time, Schedule>();
+
+        while(it.hasNext()) {
+            Entry<String, Schedule> entry = it.next();
+            if(entry.getValue().getDepartureStation().equals(station)) {
+                schedules.insert(entry.getValue().getDepartureTime(), entry.getValue());
+                Iterator<Station> it2 = entry.getValue().getStationIt();
+            }
+        }
+
+        return schedules.iterator();
     }
 
     private String arrangeStationName(String[] station) {
@@ -135,6 +165,12 @@ public class RailwaySystemClass implements RailwaySystem {
 
     private boolean existsLine(String lineName) {
         if(lines.find(lineName.toUpperCase()) != null)
+            return true;
+        return false;
+    }
+
+    private boolean existsStation(String stationName) {
+        if(stations.find(stationName.toUpperCase()) != null)
             return true;
         return false;
     }

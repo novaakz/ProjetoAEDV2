@@ -57,7 +57,7 @@ public class Main {
                 case CONSULT_LINE -> consLine(in, sys);
                 case INSERT_SCHEDULE -> inSched(in, sys);
                 case REMOVE_SCHEDULE -> System.out.println("IN DEV");
-                case CONSULT_SCHEDULES -> System.out.println("IN DEV");
+                case CONSULT_SCHEDULES -> consSched(in, sys);
                 case BEST_SCHEDULE -> System.out.println("IN DEV");
                 case TERMINATE_APP -> terminate(sys);
             }
@@ -120,6 +120,29 @@ public class Main {
             }
         catch (InvalidScheduleException e) {
             System.out.println(INVALID_SCHEDULE + " " + e.getMessage());
+        }
+    }
+
+    private static void consSched(Scanner in, RailwaySystemClass sys) {
+        try {
+
+        String lineName = in.nextLine().trim();
+        String stationName = in.nextLine().trim();
+        Iterator<Entry<Time, Schedule>> it = sys.consultSchedules(lineName, stationName);
+        while(it.hasNext()) {;
+            Schedule schedule = it.next().getValue();
+            Iterator<Station> it2 = schedule.getStationIt();
+            System.out.println(schedule.getTrain());
+
+            while(it2.hasNext()) {
+                Station station = it2.next();
+                System.out.println(station.getName() + " " + schedule.getStationTime(station).getTime());
+            }
+        }
+        } catch (InexistentLineExeption e) {
+            System.out.println(NONEXISTING_LINE);
+        } catch (NonexistentStationException e) {
+            System.out.println(NONEXISTING_DEPART_STATION);
         }
     }
 
