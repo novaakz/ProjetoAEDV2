@@ -38,8 +38,8 @@ public class Main {
     // Output messages for FAILED operations
     private static final String EXISTING_LINE = "Linha existente.";
     private static final String NONEXISTING_LINE = "Linha inexistente.";
-    private static final String NONEXISTING_STATION = "Estação inexistente.";
     private static final String INVALID_SCHEDULE = "Horário inválido.";
+    private static final String NONEXISTING_SCHEDULE = "Horário inexistente.";
     private static final String NONEXISTING_DEPART_STATION = "Estação de partida inexistente.";
     private static final String IMPOSSIBLE_ROUTE = "Percurso impossível.";
 
@@ -56,7 +56,7 @@ public class Main {
                 case REMOVE_LINE -> rmLine(in, sys);
                 case CONSULT_LINE -> consLine(in, sys);
                 case INSERT_SCHEDULE -> inSched(in, sys);
-                case REMOVE_SCHEDULE -> System.out.println("IN DEV");
+                case REMOVE_SCHEDULE -> rmSched(in, sys);
                 case CONSULT_SCHEDULES -> consSched(in, sys);
                 case BEST_SCHEDULE -> System.out.println("IN DEV");
                 case TERMINATE_APP -> terminate(sys);
@@ -120,6 +120,23 @@ public class Main {
             }
         catch (InvalidScheduleException e) {
             System.out.println(INVALID_SCHEDULE + " " + e.getMessage());
+        }
+    }
+
+    private static void rmSched(Scanner in, RailwaySystemClass sys) {
+        try {
+
+            String name = in.nextLine().trim();
+            String[] stationTime = getStationTime(in);
+
+            sys.removeSchedule(name, stationTime);
+
+            System.out.println(SCHEDULE_REMOVE_SUCCESS);
+            
+        } catch (InexistentLineExeption e) {
+            System.out.println(NONEXISTING_LINE);
+        } catch (NonexistentScheduleException e) {
+            System.out.println(NONEXISTING_SCHEDULE);
         }
     }
 

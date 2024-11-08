@@ -20,8 +20,8 @@ public class ScheduleClass implements Schedule {
     }
 
     public void addSched(Station station, Time time) {
-        schedule.insert(station, time);
         orderedStations.addLast(station);
+        schedule.insert(orderedStations.getLast(), time);
     }
 
     public Station getDepartureStation() {

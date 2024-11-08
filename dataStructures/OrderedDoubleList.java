@@ -30,31 +30,42 @@ public class OrderedDoubleList<K extends Comparable<K>, V> implements Dictionary
     @Override
     public V find(K key) {
         DoubleListNode<Entry<K, V>> tmp = findNode(key);
-        if(tmp.getElement().getKey().compareTo(key) == 0)
-            return tmp.getElement().getValue();
-        return null;
+        if(tmp != null) {
+            if(tmp.getElement().getKey().compareTo(key) == 0)
+                return tmp.getElement().getValue();
+            return null;
+        }
+        else
+            return null;
     }
 
     @Override
     public V insert(K key, V value) {
+
         DoubleListNode<Entry<K, V>> tmp = findNode(key);
-        if(tmp.getElement().getKey().compareTo(key) == 0) {
-            V old = tmp.getElement().getValue();
-            if(old != null) {
-                tmp.setElement(new EntryClass<K,V>(key, value));
-                return old;
-            }
-            data.addLast(new EntryClass<K,V>(key, value));
-            return value;
-        }
-        EntryClass<K, V> entry = new EntryClass<K,V>(key, value);
-        if(data.size() == 1) {
-            data.addFirst(entry);
+        if(tmp == null) {
+            data.addLast(new EntryClass<K, V>(key, value));
             return null;
         }
-        int pos = findNodeIndex(tmp);
-        data.addMiddle(pos, entry);
-        return null;
+        else if(tmp.getElement().getKey().compareTo(key) == 0) {
+            V old = tmp.getElement().getValue();
+            tmp.setElement(new EntryClass<K,V>(key, value));
+            return old;
+        }
+        else {
+            if(tmp.equals(data.getNode(0))) {
+                EntryClass<K, V> entry = new EntryClass<K,V>(key, value);
+                data.addFirst(entry);
+            }
+            else {
+                EntryClass<K, V> entry = new EntryClass<K,V>(key, value);
+                int i = 0;
+                while(i < data.size() && data.get(i).getKey().compareTo(key) < 0)
+                    i++;
+                data.addMiddle(i, entry);
+            }
+            return null;
+        }
     }
 
     @Override
@@ -69,22 +80,14 @@ public class OrderedDoubleList<K extends Comparable<K>, V> implements Dictionary
         return null;
     }
 
-    protected DoubleListNode<Entry<K, V>> findNode(K key) {
+    private DoubleListNode<Entry<K, V>> findNode(K key) {
         if(data.isEmpty())
-            return new DoubleListNode<Entry<K,V>>(new EntryClass<K,V>(key, null));
+            return null;
         int i = 0;
         while(i < data.size() && data.get(i).getKey().compareTo(key) < 0)
             i++;
         if(i == data.size())
-            return new DoubleListNode<Entry<K,V>>(new EntryClass<K,V>(key, null));
+            return null;
         return data.getNode(i);
-    }
-
-    // pre: node exists in data
-    protected int findNodeIndex(DoubleListNode<Entry<K, V>> node) {
-        int i = 0;
-        while(i < data.size() && data.get(i).getKey().compareTo(node.getElement().getKey()) != 0)
-            i++;
-        return i;
     }
 }

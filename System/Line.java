@@ -18,4 +18,6 @@ public interface Line extends Comparable<Line>, Serializable {
 
     boolean isDepartingStation(Station station);
 
+    void removeSchedule(String train);
+
 }

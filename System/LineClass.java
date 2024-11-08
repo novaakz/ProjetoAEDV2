@@ -25,6 +25,11 @@ public class LineClass implements Line {
         schedules.insert(train, schedule);
     }
 
+    @Override
+    public void removeSchedule(String train) {
+        schedules.remove(train);
+    }
+
     public DoubleList<Station> getStations() {
         return this.stations;
     }

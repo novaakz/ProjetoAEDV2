@@ -64,9 +64,9 @@ public class RailwaySystemClass implements RailwaySystem {
         int currentPos = 0;
         DoubleList<Station> lineStations = line.getStations();
 
-        if(!firstStationName.equals(lineStations.getFirst().getName())) {
-            if(!firstStationName.equals(lineStations.getLast().getName()))
-                throw new InvalidScheduleException();
+        if(!firstStationName.toUpperCase().equals(lineStations.getFirst().getName().toUpperCase())) {
+            if(!firstStationName.toUpperCase().equals(lineStations.getLast().getName().toUpperCase()))
+                throw new InvalidScheduleException("1");
             else {
                 dir = -1;
                 currentPos = lineStations.size() - 1;
@@ -90,7 +90,7 @@ public class RailwaySystemClass implements RailwaySystem {
             boolean found = false;
             if(dir == 1) {
                 while(currentPos < lineStations.size() && !found) {
-                    if(lineStations.get(currentPos).equals(station))
+                    if(lineStations.get(currentPos).getName().equals(station.getName()))
                         found = true;
                     else
                         currentPos++;
@@ -104,25 +104,57 @@ public class RailwaySystemClass implements RailwaySystem {
                         currentPos--;
                 }
             }
-            if(!found || !scheduleTimes.get(stationsValidated - 1).hasTravelTime(time))
-                    throw new InvalidScheduleException();
-                scheduleStations.add(stationsValidated, station);
-                scheduleTimes.add(stationsValidated, time);
-                stationsValidated++;
+            if(!found)
+                    throw new InvalidScheduleException("2");
+            if(!scheduleTimes.get(stationsValidated - 1).hasTravelTime(time))
+                throw new InvalidScheduleException("3");
+
+            scheduleStations.add(stationsValidated, station);
+            scheduleTimes.add(stationsValidated, time);
+            stationsValidated++;
         }
 
         Schedule schedule = new ScheduleClass();
         schedule.addTrain(train);
-        Iterator<Station> s = scheduleStations.iterator();
-        Iterator<Time> t = scheduleTimes.iterator();
+        int counter = 0;
         
-        while(s.hasNext())
-            schedule.addSched(s.next(), t.next());
+        while(counter < stationsValidated) {
+            schedule.addSched(scheduleStations.get(counter), scheduleTimes.get(counter));
+            counter++;
+        }
 
         line.insertSchedule(train, schedule);
     }
 
-    // SOMETHING WRONG WITH THIS METHOD!!!!!!!!!
+    public void removeSchedule(String lineName, String[] stationAndTime) 
+    throws InexistentLineExeption, NonexistentScheduleException {
+        if (!existsLine(lineName))
+            throw new InexistentLineExeption();
+
+        Line line = lines.find(lineName.toUpperCase());
+
+        String stationName = arrangeStationName(stationAndTime);
+        Time time = parseTime(stationAndTime[stationAndTime.length - 1]);
+
+        Iterator<Entry<String, Schedule>> schedules = line.getScheduleIt();
+        boolean found = false;
+
+        while (schedules.hasNext() && !found) {
+            Schedule schedule = schedules.next().getValue();
+
+            if(schedule.getDepartureStation().equals(stations.find(stationName.toUpperCase()))) {
+
+                if(schedule.getDepartureTime().compareTo(time) == 0) {
+                    line.removeSchedule(schedule.getTrain());
+                    found = true;
+                }
+            }
+        }
+        if (!found) {
+            throw new NonexistentScheduleException();
+        }
+    }
+
     public Iterator<Entry<Time, Schedule>> consultSchedules(String lineName, String stationName) 
     throws InexistentLineExeption, NonexistentStationException {
 
@@ -177,18 +209,17 @@ public class RailwaySystemClass implements RailwaySystem {
     private DoubleList<Station> arrangeStations(DoubleList<String> stationsNames) {
         DoubleList<Station> stationsList= new DoubleList<Station>();
         Iterator<String> it = stationsNames.iterator();
-        int i = 0;
 
         while(it.hasNext()) {
             String sName = it.next();
-            Station station = this.stations.find(sName);
+            Station station = this.stations.find(sName.toUpperCase());
 
             // IF station is null, therefore doesn't exist
             if(!(station != null)) {
                 station = new StationClass(sName);
                 this.stations.insert(sName.toUpperCase(), station);
             }
-            stationsList.add(i++, station);
+            stationsList.addLast(station);
         }
         return stationsList;
     }
