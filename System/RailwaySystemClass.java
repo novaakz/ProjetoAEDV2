@@ -144,7 +144,6 @@ public class RailwaySystemClass implements RailwaySystem {
             Entry<String, Schedule> entry = it.next();
             if(entry.getValue().getDepartureStation().equals(station)) {
                 schedules.insert(entry.getValue().getDepartureTime(), entry.getValue());
-                Iterator<Station> it2 = entry.getValue().getStationIt();
             }
         }
 
