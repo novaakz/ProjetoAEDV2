@@ -1,93 +1,128 @@
 package dataStructures;
 
+import org.w3c.dom.Node;
+
 import dataStructures.DoubleList.*;
 
 public class OrderedDoubleList<K extends Comparable<K>, V> implements Dictionary<K, V> {
 
     static final long serialVersionUID = 0L;
 
-    protected DoubleList<Entry<K, V>> data;
+    protected DoubleListNode<Entry<K, V>> head;
+    protected DoubleListNode<Entry<K, V>> tail;
+    protected int currentSize;
 
     public OrderedDoubleList() {
-        this.data = new DoubleList<Entry<K, V>>();
+        head = null;
+        tail = null;
+        currentSize = 0;
     }
 
     @Override
     public boolean isEmpty() {
-        return data.isEmpty();
+        return currentSize == 0;
     }
 
     @Override
     public int size() {
-        return data.size();
+        return currentSize;
     }
 
     @Override
     public Iterator<Entry<K, V>> iterator() {
-        return data.iterator();
+        return new DoubleListIterator<Entry<K, V>>(head, tail);
     }
 
     @Override
     public V find(K key) {
-        DoubleListNode<Entry<K, V>> tmp = findNode(key);
-        if(tmp != null) {
-            if(tmp.getElement().getKey().compareTo(key) == 0)
-                return tmp.getElement().getValue();
+        DoubleListNode<Entry<K, V>> node = findNode(key);
+        if(node == null)
             return null;
-        }
+        else if(node.getElement().getKey().compareTo(key) == 0)
+            return node.getElement().getValue();
         else
             return null;
     }
 
     @Override
     public V insert(K key, V value) {
-
-        DoubleListNode<Entry<K, V>> tmp = findNode(key);
-        if(tmp == null) {
-            data.addLast(new EntryClass<K, V>(key, value));
+        DoubleListNode<Entry<K, V>> node = findNode(key);
+        if(isEmpty()) {
+            node = new DoubleListNode<Entry<K,V>>(new EntryClass<K,V>(key, value));
+            head = tail = node;
+            currentSize++;
             return null;
         }
-        else if(tmp.getElement().getKey().compareTo(key) == 0) {
-            V old = tmp.getElement().getValue();
-            tmp.setElement(new EntryClass<K,V>(key, value));
+        else if(node == null) {
+            node = new DoubleListNode<Entry<K,V>>(new EntryClass<K,V>(key, value));
+            tail.setNext(node);
+            node.setPrevious(tail);
+            tail = node;
+        }
+        else if(node.getElement().getKey().compareTo(key) == 0) {
+            V old = node.getElement().getValue();
+            node.setElement(new EntryClass<K,V>(key, value));
             return old;
         }
-        else {
-            if(tmp.equals(data.getNode(0))) {
-                EntryClass<K, V> entry = new EntryClass<K,V>(key, value);
-                data.addFirst(entry);
-            }
-            else {
-                EntryClass<K, V> entry = new EntryClass<K,V>(key, value);
-                int i = 0;
-                while(i < data.size() && data.get(i).getKey().compareTo(key) < 0)
-                    i++;
-                data.addMiddle(i, entry);
-            }
-            return null;
+        else if(node == head) {
+            node = new DoubleListNode<Entry<K,V>>(new EntryClass<K,V>(key, value));
+            head.setPrevious(node);
+            node.setNext(head);
+            head = node;
         }
+        else {
+            DoubleListNode<Entry<K,V>> nextNode = node;
+            DoubleListNode<Entry<K,V>> prevNode = nextNode.getPrevious();
+            DoubleListNode<Entry<K,V>> newNode = new DoubleListNode<Entry<K,V>>(new EntryClass<K,V>(key, value), prevNode, nextNode);
+            prevNode.setNext(newNode);
+            nextNode.setPrevious(newNode);
+        }
+        this.currentSize++;
+        return null;
     }
 
     @Override
     public V remove(K key) {
-        DoubleListNode<Entry<K, V>> tmp = findNode(key);
-        V value = tmp.getElement().getValue();
-        if(value != null)
-            if(tmp.getElement().getKey().compareTo(key) == 0) {
-                data.remove(tmp.getElement());
-                return value;
+        DoubleListNode<Entry<K, V>> node = findNode(key);
+        if(node == null) {
+            return null;
+        }
+        else if(node.getElement().getKey().compareTo(key) == 0) {
+            V value = node.getElement().getValue();
+            if(node == head) {
+                head = head.getNext();
+                if ( head == null )
+                    tail = null;
+                else
+                    head.setPrevious(null);
+                currentSize--;
             }
+            else if(node == tail) {
+                tail = tail.getPrevious();
+                if ( tail == null )
+                    head = null;
+                else
+                    tail.setNext(null);
+                currentSize--;
+            }
+            else {
+                DoubleListNode<Entry<K, V>> prev = node.getPrevious();
+                DoubleListNode<Entry<K, V>> next = node.getNext();
+                prev.setNext(next);
+                next.setPrevious(prev);
+                this.currentSize--;
+            }
+            return value;
+        }
         return null;
     }
 
     private DoubleListNode<Entry<K, V>> findNode(K key) {
-        if(data.isEmpty())
-            return null;
-        int i = 0;
-        while(i < data.size() && data.get(i).getKey().compareTo(key) < 0)
-            i++;
-        if(i == data.size())
-            return null;
-        return data.getNode(i);
+        DoubleListNode<Entry<K, V>> node = head;
+        while ( node != null && node.getElement().getKey().compareTo(key) < 0)
+        {
+            node = node.getNext();
+        }
+        return node;
     }
 }

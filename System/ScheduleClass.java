@@ -43,6 +43,10 @@ public class ScheduleClass implements Schedule {
     public Time getStationTime(Station station) {
         return schedule.find(station);
     }
+
+    public boolean existsStation(Station station) {
+        return orderedStations.find(station) != -1;
+    }
     
     @Override
     public int compareTo(Schedule o) {

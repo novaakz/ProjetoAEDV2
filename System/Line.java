@@ -20,4 +20,8 @@ public interface Line extends Comparable<Line>, Serializable {
 
     void removeSchedule(String train);
 
+    boolean existsStation(Station station);
+
+    Schedule getBestSchedule(Station departure, Station destination, Time time);
+
 }

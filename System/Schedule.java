@@ -19,5 +19,7 @@ public interface Schedule extends Comparable<Schedule>, Serializable {
     Iterator<Station> getStationIt();
 
     Time getStationTime(Station station);
+
+    boolean existsStation(Station station);
     
 }
